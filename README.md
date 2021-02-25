@@ -28,14 +28,10 @@ To keep the implementation simple and dependencies to a minimum, Resumed makes s
 ## Installation
 
 ```shell
-npm install -g resumed jsonresume-theme-even # or your theme of choice
+npm install resumed jsonresume-theme-even # or your theme of choice
 ```
 
-One-off invocation without local installation:
-
-```shell
-npx resumed -p jsonresume-theme-even # or your theme of choice
-```
+ℹ️ Global installation is not supported, as it breaks theme discovery.
 
 ## Usage
 
