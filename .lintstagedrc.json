@@ -1,0 +1,4 @@
+{
+  "*.{js,ts}": ["tsdx lint -- --fix", "jest --bail --findRelatedTests"],
+  "*.{json,md,yml}": "prettier --write"
+}
