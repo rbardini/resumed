@@ -55,6 +55,8 @@ $ resumed --help
     -h, --help       Displays this message
 ```
 
+View [real-world example](https://github.com/rbardini/resume.rbardini.com).
+
 ## Commands
 
 ### `render` (default)
