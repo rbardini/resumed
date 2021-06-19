@@ -41,9 +41,8 @@ cli
 
       if (otherLoadedThemes.length > 0) {
         console.log(
-          `Found ${
-            otherLoadedThemes.length + 1
-          } JSON Resume themes installed, defaulting to ${yellow(
+          `Found ${otherLoadedThemes.length +
+            1} JSON Resume themes installed, defaulting to ${yellow(
             loadedTheme.name,
           )}. Pass the ${yellow(
             '--theme',
