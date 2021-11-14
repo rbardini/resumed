@@ -3,8 +3,6 @@
 [![npm package version](https://img.shields.io/npm/v/resumed)](https://www.npmjs.com/package/resumed)
 [![Build status](https://img.shields.io/github/workflow/status/rbardini/resumed/Main)](https://github.com/rbardini/resumed/actions)
 [![Code coverage](https://img.shields.io/codecov/c/github/rbardini/resumed.svg)](https://codecov.io/gh/rbardini/resumed)
-[![Dependencies status](https://img.shields.io/david/rbardini/resumed)](https://david-dm.org/rbardini/resumed)
-[![devDependencies status](https://img.shields.io/david/dev/rbardini/resumed)](https://david-dm.org/rbardini/resumed?type=dev)
 
 👔 Lightweight [JSON Resume](https://jsonresume.org/) builder, no-frills alternative to resume-cli.
 
