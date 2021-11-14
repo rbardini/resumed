@@ -27,7 +27,7 @@ const findThemesInNodeModules = async (theme = '*', nodeModulesDir: string) =>
 
 export const loadThemes = async (theme?: string) => {
   const themeSearchDir = await escalade(
-    __dirname,
+    process.cwd(),
     (_dir, names) => names.includes('node_modules') && '.',
   )
 
