@@ -51,7 +51,7 @@ export const loadThemes = async (theme?: string) => {
     }),
   )
 
-  return uniqBy(themesInfo, 'requirePath').map(info => ({
+  return uniqBy(themesInfo, 'path').map(info => ({
     ...info,
     module: require(info.path),
   }))
