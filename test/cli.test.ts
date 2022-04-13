@@ -1,5 +1,4 @@
 import { promises as fs } from 'fs'
-import { mocked } from 'ts-jest/utils'
 import { init, loadThemes, render, validate } from '../src'
 import { cli } from '../src/cli'
 
@@ -29,7 +28,7 @@ describe('init', () => {
 
     expect(logSpy).toHaveBeenCalledTimes(1)
     expect(logSpy.mock.calls[0][0]).toMatchInlineSnapshot(
-      `"Done! Start editing resume.json now, and run the render command when you are ready. 👍"`,
+      `"Done! Start editing [33mresume.json[39m now, and run the [33mrender[39m command when you are ready. 👍"`,
     )
   })
 
@@ -41,7 +40,7 @@ describe('init', () => {
 
     expect(logSpy).toHaveBeenCalledTimes(1)
     expect(logSpy.mock.calls[0][0]).toMatchInlineSnapshot(
-      `"Done! Start editing custom.json now, and run the render command when you are ready. 👍"`,
+      `"Done! Start editing [33mcustom.json[39m now, and run the [33mrender[39m command when you are ready. 👍"`,
     )
   })
 })
@@ -53,9 +52,9 @@ describe('render', () => {
       { module: { render: 'theme1' }, name: 'theme1', path: '/theme1' },
     ]
 
-    mocked(fs.readFile).mockResolvedValueOnce(JSON.stringify(resume))
-    mocked(loadThemes).mockResolvedValueOnce(loadedThemes)
-    mocked(render).mockResolvedValueOnce('rendered')
+    jest.mocked(fs.readFile).mockResolvedValueOnce(JSON.stringify(resume))
+    jest.mocked(loadThemes).mockResolvedValueOnce(loadedThemes)
+    jest.mocked(render).mockResolvedValueOnce('rendered')
 
     await cli.parse(['', '', 'render'])
 
@@ -73,7 +72,7 @@ describe('render', () => {
 
     expect(logSpy).toHaveBeenCalledTimes(1)
     expect(logSpy.mock.calls.join('\n')).toMatchInlineSnapshot(
-      `"You can find your rendered resume at resume.html. Nice work! 🚀"`,
+      `"You can find your rendered resume at [33mresume.html[39m. Nice work! 🚀"`,
     )
   })
 
@@ -83,9 +82,9 @@ describe('render', () => {
       { module: { render: 'theme1' }, name: 'theme1', path: '/theme1' },
     ]
 
-    mocked(fs.readFile).mockResolvedValueOnce(JSON.stringify(resume))
-    mocked(loadThemes).mockResolvedValueOnce(loadedThemes)
-    mocked(render).mockResolvedValueOnce('rendered')
+    jest.mocked(fs.readFile).mockResolvedValueOnce(JSON.stringify(resume))
+    jest.mocked(loadThemes).mockResolvedValueOnce(loadedThemes)
+    jest.mocked(render).mockResolvedValueOnce('rendered')
 
     await cli.parse(['', '', 'render', 'custom.json'])
 
@@ -103,7 +102,7 @@ describe('render', () => {
 
     expect(logSpy).toHaveBeenCalledTimes(1)
     expect(logSpy.mock.calls.join('\n')).toMatchInlineSnapshot(
-      `"You can find your rendered resume at resume.html. Nice work! 🚀"`,
+      `"You can find your rendered resume at [33mresume.html[39m. Nice work! 🚀"`,
     )
   })
 
@@ -114,9 +113,9 @@ describe('render', () => {
       { module: { render: 'theme2' }, name: 'theme2', path: '/theme2' },
     ]
 
-    mocked(fs.readFile).mockResolvedValueOnce(JSON.stringify(resume))
-    mocked(loadThemes).mockResolvedValueOnce(loadedThemes)
-    mocked(render).mockResolvedValueOnce('rendered')
+    jest.mocked(fs.readFile).mockResolvedValueOnce(JSON.stringify(resume))
+    jest.mocked(loadThemes).mockResolvedValueOnce(loadedThemes)
+    jest.mocked(render).mockResolvedValueOnce('rendered')
 
     await cli.parse(['', '', 'render'])
 
@@ -134,21 +133,23 @@ describe('render', () => {
 
     expect(logSpy).toHaveBeenCalledTimes(2)
     expect(logSpy.mock.calls.join('\n')).toMatchInlineSnapshot(`
-      "Found 2 JSON Resume themes installed, defaulting to theme1. Pass the --theme option if you would like to use another one.
-      You can find your rendered resume at resume.html. Nice work! 🚀"
+      "Found 2 JSON Resume themes installed, defaulting to [33mtheme1[39m. Pass the [33m--theme[39m option if you would like to use another one.
+      You can find your rendered resume at [33mresume.html[39m. Nice work! 🚀"
     `)
   })
 
   it('renders a resume with specific theme', async () => {
     const resume = { resume: {} }
 
-    mocked(fs.readFile).mockResolvedValueOnce(JSON.stringify(resume))
-    mocked(loadThemes).mockImplementationOnce(theme =>
-      Promise.resolve([
-        { module: { render: theme }, name: theme!, path: `/${theme}` },
-      ]),
-    )
-    mocked(render).mockResolvedValueOnce('rendered')
+    jest.mocked(fs.readFile).mockResolvedValueOnce(JSON.stringify(resume))
+    jest
+      .mocked(loadThemes)
+      .mockImplementationOnce(theme =>
+        Promise.resolve([
+          { module: { render: theme }, name: theme!, path: `/${theme}` },
+        ]),
+      )
+    jest.mocked(render).mockResolvedValueOnce('rendered')
 
     await cli.parse(['', '', 'render', '--theme', 'custom-theme'])
 
@@ -166,7 +167,7 @@ describe('render', () => {
 
     expect(logSpy).toHaveBeenCalledTimes(1)
     expect(logSpy.mock.calls.join('\n')).toMatchInlineSnapshot(
-      `"You can find your rendered resume at resume.html. Nice work! 🚀"`,
+      `"You can find your rendered resume at [33mresume.html[39m. Nice work! 🚀"`,
     )
   })
 
@@ -176,9 +177,9 @@ describe('render', () => {
       { module: { render: 'theme1' }, name: 'theme1', path: '/theme1' },
     ]
 
-    mocked(fs.readFile).mockResolvedValueOnce(JSON.stringify(resume))
-    mocked(loadThemes).mockResolvedValueOnce(loadedThemes)
-    mocked(render).mockResolvedValueOnce('rendered')
+    jest.mocked(fs.readFile).mockResolvedValueOnce(JSON.stringify(resume))
+    jest.mocked(loadThemes).mockResolvedValueOnce(loadedThemes)
+    jest.mocked(render).mockResolvedValueOnce('rendered')
 
     await cli.parse(['', '', 'render', '--output', 'custom-output.html'])
 
@@ -196,13 +197,13 @@ describe('render', () => {
 
     expect(logSpy).toHaveBeenCalledTimes(1)
     expect(logSpy.mock.calls.join('\n')).toMatchInlineSnapshot(
-      `"You can find your rendered resume at custom-output.html. Nice work! 🚀"`,
+      `"You can find your rendered resume at [33mcustom-output.html[39m. Nice work! 🚀"`,
     )
   })
 
   it('asks to install a theme if none found and exits with failure code', async () => {
-    mocked(fs.readFile).mockResolvedValueOnce('{}')
-    mocked(loadThemes).mockResolvedValueOnce([])
+    jest.mocked(fs.readFile).mockResolvedValueOnce('{}')
+    jest.mocked(loadThemes).mockResolvedValueOnce([])
 
     await cli.parse(['', '', 'render'])
 
@@ -214,7 +215,7 @@ describe('render', () => {
 
     expect(logSpy).toHaveBeenCalledTimes(1)
     expect(logSpy.mock.calls[0][0]).toMatchInlineSnapshot(
-      `"Could not find a JSON Resume theme to render. Try installing one (e.g. npm i jsonresume-theme-even) and run the command again. 😉"`,
+      `"Could not find a JSON Resume theme to render. Try installing one (e.g. [33mnpm i jsonresume-theme-even[39m) and run the command again. 😉"`,
     )
 
     expect(render).not.toHaveBeenCalled()
@@ -231,7 +232,7 @@ describe('validate', () => {
 
     expect(logSpy).toHaveBeenCalledTimes(1)
     expect(logSpy.mock.calls[0][0]).toMatchInlineSnapshot(
-      `"Your resume.json looks amazing! ✨"`,
+      `"Your [33mresume.json[39m looks amazing! ✨"`,
     )
   })
 
@@ -243,13 +244,13 @@ describe('validate', () => {
 
     expect(logSpy).toHaveBeenCalledTimes(1)
     expect(logSpy.mock.calls[0][0]).toMatchInlineSnapshot(
-      `"Your custom.json looks amazing! ✨"`,
+      `"Your [33mcustom.json[39m looks amazing! ✨"`,
     )
   })
 
   it('rethrows error if not an array', async () => {
     const error = new Error('validate')
-    mocked(validate).mockImplementationOnce(() => {
+    jest.mocked(validate).mockImplementationOnce(() => {
       throw error
     })
 
@@ -261,17 +262,17 @@ describe('validate', () => {
       message: `message ${i}`,
       path: `path ${i}`,
     }))
-    mocked(validate).mockRejectedValueOnce(errors)
+    jest.mocked(validate).mockRejectedValueOnce(errors)
 
     await cli.parse(['', '', 'validate'])
 
     expect(logSpy).toHaveBeenCalledTimes(errors.length + 1)
     expect(logSpy.mock.calls.join('\n')).toMatchInlineSnapshot(`
-      "Uh-oh! The following errors were found in resume.json:
+      "Uh-oh! The following errors were found in [33mresume.json[39m:
 
-       ❌ message 0 at path 0.
-       ❌ message 1 at path 1.
-       ❌ message 2 at path 2."
+       [31m❌ message 0[39m at [33mpath 0[39m.
+       [31m❌ message 1[39m at [33mpath 1[39m.
+       [31m❌ message 2[39m at [33mpath 2[39m."
     `)
     expect(process.exitCode).toBe(1)
   })
