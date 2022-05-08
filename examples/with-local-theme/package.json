@@ -1,0 +1,11 @@
+{
+  "private": true,
+  "scripts": {
+    "init": "resumed init",
+    "render": "resumed render"
+  },
+  "dependencies": {
+    "jsonresume-theme-local": "file:./theme",
+    "resumed": "^1.0.0"
+  }
+}

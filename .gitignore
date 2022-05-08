@@ -3,3 +3,7 @@
 node_modules
 coverage
 dist
+examples/**/package-lock.json
+resume.html
+resume.json
+resume.pdf
