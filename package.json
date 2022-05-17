@@ -55,10 +55,10 @@
   "devDependencies": {
     "@types/lodash.uniqby": "4.7.7",
     "dts-cli": "1.5.1",
-    "husky": "7.0.4",
+    "husky": "8.0.1",
     "jsonresume-theme-even": "0.17.0",
     "lint-staged": "12.4.1",
-    "prettier-plugin-packagejson": "2.2.17",
+    "prettier-plugin-packagejson": "2.2.18",
     "tslib": "2.4.0",
     "typescript": "4.6.4"
   },
