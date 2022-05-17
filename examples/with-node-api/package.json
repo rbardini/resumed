@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "scripts": {
+    "init": "resumed init",
+    "render": "node index.js"
+  },
+  "dependencies": {
+    "jsonresume-theme-even": "^0.17.0",
+    "puppeteer": "^13.0.0",
+    "resumed": "^1.0.0"
+  }
+}
