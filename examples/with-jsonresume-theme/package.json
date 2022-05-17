@@ -1,5 +1,6 @@
 {
   "private": true,
+  "type": "module",
   "scripts": {
     "init": "resumed init",
     "render": "resumed render"
