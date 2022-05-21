@@ -10,5 +10,5 @@ Clone this example with [degit](https://github.com/Rich-Harris/degit), install d
 npx degit rbardini/resumed/examples/with-local-theme
 npm install
 npm run init
-npm run render
+npm start
 ```

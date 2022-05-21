@@ -3,7 +3,7 @@
   "type": "module",
   "scripts": {
     "init": "resumed init",
-    "render": "resumed render"
+    "start": "resumed"
   },
   "dependencies": {
     "jsonresume-theme-even": "^0.17.0",
