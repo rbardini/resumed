@@ -1,5 +1,7 @@
 import { promises as fs } from 'fs'
-import { init, loadThemes, render, validate } from '../src'
+// @ts-ignore
+import * as theme from 'jsonresume-theme-even'
+import { init, render, validate } from '../src'
 import { cli } from '../src/cli'
 
 jest.mock('fs', () => {
@@ -18,6 +20,7 @@ jest.mock('fs', () => {
 jest.mock('../src')
 
 const logSpy = jest.spyOn(console, 'log').mockImplementation()
+const errorSpy = jest.spyOn(console, 'error').mockImplementation()
 
 describe('init', () => {
   it('creates a sample resume with default filename', async () => {
@@ -47,25 +50,18 @@ describe('init', () => {
 
 describe('render', () => {
   it('renders a resume with default filename', async () => {
-    const resume = { resume: {} }
-    const loadedThemes = [
-      { module: { render: 'theme1' }, name: 'theme1', path: '/theme1' },
-    ]
+    const resume = {}
 
     jest.mocked(fs.readFile).mockResolvedValueOnce(JSON.stringify(resume))
-    jest.mocked(loadThemes).mockResolvedValueOnce(loadedThemes)
     jest.mocked(render).mockResolvedValueOnce('rendered')
 
-    await cli.parse(['', '', 'render'])
+    await cli.parse(['', '', 'render', '--theme', 'jsonresume-theme-even'])
 
     expect(fs.readFile).toHaveBeenCalledTimes(1)
     expect(fs.readFile).toHaveBeenCalledWith('resume.json', 'utf-8')
 
-    expect(loadThemes).toHaveBeenCalledTimes(1)
-    expect(loadThemes).toHaveBeenCalledWith(undefined)
-
     expect(render).toHaveBeenCalledTimes(1)
-    expect(render).toHaveBeenCalledWith(resume, loadedThemes[0].module)
+    expect(render).toHaveBeenCalledWith(resume, theme)
 
     expect(fs.writeFile).toHaveBeenCalledTimes(1)
     expect(fs.writeFile).toHaveBeenCalledWith('resume.html', 'rendered')
@@ -77,90 +73,25 @@ describe('render', () => {
   })
 
   it('renders a resume with custom filename', async () => {
-    const resume = { resume: {} }
-    const loadedThemes = [
-      { module: { render: 'theme1' }, name: 'theme1', path: '/theme1' },
-    ]
+    const resume = {}
 
     jest.mocked(fs.readFile).mockResolvedValueOnce(JSON.stringify(resume))
-    jest.mocked(loadThemes).mockResolvedValueOnce(loadedThemes)
     jest.mocked(render).mockResolvedValueOnce('rendered')
 
-    await cli.parse(['', '', 'render', 'custom.json'])
+    await cli.parse([
+      '',
+      '',
+      'render',
+      'custom.json',
+      '--theme',
+      'jsonresume-theme-even',
+    ])
 
     expect(fs.readFile).toHaveBeenCalledTimes(1)
     expect(fs.readFile).toHaveBeenCalledWith('custom.json', 'utf-8')
 
-    expect(loadThemes).toHaveBeenCalledTimes(1)
-    expect(loadThemes).toHaveBeenCalledWith(undefined)
-
     expect(render).toHaveBeenCalledTimes(1)
-    expect(render).toHaveBeenCalledWith(resume, loadedThemes[0].module)
-
-    expect(fs.writeFile).toHaveBeenCalledTimes(1)
-    expect(fs.writeFile).toHaveBeenCalledWith('resume.html', 'rendered')
-
-    expect(logSpy).toHaveBeenCalledTimes(1)
-    expect(logSpy.mock.calls.join('\n')).toMatchInlineSnapshot(
-      `"You can find your rendered resume at [33mresume.html[39m. Nice work! 🚀"`,
-    )
-  })
-
-  it('renders a resume with first theme found when multiple are installed', async () => {
-    const resume = { resume: {} }
-    const loadedThemes = [
-      { module: { render: 'theme1' }, name: 'theme1', path: '/theme1' },
-      { module: { render: 'theme2' }, name: 'theme2', path: '/theme2' },
-    ]
-
-    jest.mocked(fs.readFile).mockResolvedValueOnce(JSON.stringify(resume))
-    jest.mocked(loadThemes).mockResolvedValueOnce(loadedThemes)
-    jest.mocked(render).mockResolvedValueOnce('rendered')
-
-    await cli.parse(['', '', 'render'])
-
-    expect(fs.readFile).toHaveBeenCalledTimes(1)
-    expect(fs.readFile).toHaveBeenCalledWith('resume.json', 'utf-8')
-
-    expect(loadThemes).toHaveBeenCalledTimes(1)
-    expect(loadThemes).toHaveBeenCalledWith(undefined)
-
-    expect(render).toHaveBeenCalledTimes(1)
-    expect(render).toHaveBeenCalledWith(resume, loadedThemes[0].module)
-
-    expect(fs.writeFile).toHaveBeenCalledTimes(1)
-    expect(fs.writeFile).toHaveBeenCalledWith('resume.html', 'rendered')
-
-    expect(logSpy).toHaveBeenCalledTimes(2)
-    expect(logSpy.mock.calls.join('\n')).toMatchInlineSnapshot(`
-      "Found 2 JSON Resume themes installed, defaulting to [33mtheme1[39m. Pass the [33m--theme[39m option if you would like to use another one.
-      You can find your rendered resume at [33mresume.html[39m. Nice work! 🚀"
-    `)
-  })
-
-  it('renders a resume with specific theme', async () => {
-    const resume = { resume: {} }
-
-    jest.mocked(fs.readFile).mockResolvedValueOnce(JSON.stringify(resume))
-    jest
-      .mocked(loadThemes)
-      .mockImplementationOnce(theme =>
-        Promise.resolve([
-          { module: { render: theme }, name: theme!, path: `/${theme}` },
-        ]),
-      )
-    jest.mocked(render).mockResolvedValueOnce('rendered')
-
-    await cli.parse(['', '', 'render', '--theme', 'custom-theme'])
-
-    expect(fs.readFile).toHaveBeenCalledTimes(1)
-    expect(fs.readFile).toHaveBeenCalledWith('resume.json', 'utf-8')
-
-    expect(loadThemes).toHaveBeenCalledTimes(1)
-    expect(loadThemes).toHaveBeenCalledWith('custom-theme')
-
-    expect(render).toHaveBeenCalledTimes(1)
-    expect(render).toHaveBeenCalledWith(resume, { render: 'custom-theme' })
+    expect(render).toHaveBeenCalledWith(resume, theme)
 
     expect(fs.writeFile).toHaveBeenCalledTimes(1)
     expect(fs.writeFile).toHaveBeenCalledWith('resume.html', 'rendered')
@@ -172,25 +103,26 @@ describe('render', () => {
   })
 
   it('renders a resume with custom output', async () => {
-    const resume = { resume: {} }
-    const loadedThemes = [
-      { module: { render: 'theme1' }, name: 'theme1', path: '/theme1' },
-    ]
+    const resume = {}
 
     jest.mocked(fs.readFile).mockResolvedValueOnce(JSON.stringify(resume))
-    jest.mocked(loadThemes).mockResolvedValueOnce(loadedThemes)
     jest.mocked(render).mockResolvedValueOnce('rendered')
 
-    await cli.parse(['', '', 'render', '--output', 'custom-output.html'])
+    await cli.parse([
+      '',
+      '',
+      'render',
+      '--theme',
+      'jsonresume-theme-even',
+      '--output',
+      'custom-output.html',
+    ])
 
     expect(fs.readFile).toHaveBeenCalledTimes(1)
     expect(fs.readFile).toHaveBeenCalledWith('resume.json', 'utf-8')
 
-    expect(loadThemes).toHaveBeenCalledTimes(1)
-    expect(loadThemes).toHaveBeenCalledWith(undefined)
-
     expect(render).toHaveBeenCalledTimes(1)
-    expect(render).toHaveBeenCalledWith(resume, { render: 'theme1' })
+    expect(render).toHaveBeenCalledWith(resume, theme)
 
     expect(fs.writeFile).toHaveBeenCalledTimes(1)
     expect(fs.writeFile).toHaveBeenCalledWith('custom-output.html', 'rendered')
@@ -201,21 +133,61 @@ describe('render', () => {
     )
   })
 
-  it('asks to install a theme if none found and exits with failure code', async () => {
-    jest.mocked(fs.readFile).mockResolvedValueOnce('{}')
-    jest.mocked(loadThemes).mockResolvedValueOnce([])
+  it('renders a resume with theme defined via the `.meta.theme` field', async () => {
+    const resume = { meta: { theme: 'jsonresume-theme-even' } }
+
+    jest.mocked(fs.readFile).mockResolvedValueOnce(JSON.stringify(resume))
+    jest.mocked(render).mockResolvedValueOnce('rendered')
 
     await cli.parse(['', '', 'render'])
 
     expect(fs.readFile).toHaveBeenCalledTimes(1)
     expect(fs.readFile).toHaveBeenCalledWith('resume.json', 'utf-8')
 
-    expect(loadThemes).toHaveBeenCalledTimes(1)
-    expect(loadThemes).toHaveBeenCalledWith(undefined)
+    expect(render).toHaveBeenCalledTimes(1)
+    expect(render).toHaveBeenCalledWith(resume, theme)
+
+    expect(fs.writeFile).toHaveBeenCalledTimes(1)
+    expect(fs.writeFile).toHaveBeenCalledWith('resume.html', 'rendered')
 
     expect(logSpy).toHaveBeenCalledTimes(1)
-    expect(logSpy.mock.calls[0][0]).toMatchInlineSnapshot(
-      `"Could not find a JSON Resume theme to render. Try installing one (e.g. [33mnpm i jsonresume-theme-even[39m) and run the command again. 😉"`,
+    expect(logSpy.mock.calls.join('\n')).toMatchInlineSnapshot(
+      `"You can find your rendered resume at [33mresume.html[39m. Nice work! 🚀"`,
+    )
+  })
+
+  it('asks to define a theme if none specified and exits with failure code', async () => {
+    const resume = {}
+
+    jest.mocked(fs.readFile).mockResolvedValueOnce(JSON.stringify(resume))
+
+    await cli.parse(['', '', 'render'])
+
+    expect(fs.readFile).toHaveBeenCalledTimes(1)
+    expect(fs.readFile).toHaveBeenCalledWith('resume.json', 'utf-8')
+
+    expect(errorSpy).toHaveBeenCalledTimes(1)
+    expect(errorSpy.mock.calls[0][0]).toMatchInlineSnapshot(
+      `"No theme to use. Please specify one via the [33m--theme[39m option or the [33m.meta.theme[39m field of your resume."`,
+    )
+
+    expect(render).not.toHaveBeenCalled()
+    expect(process.exitCode).toBe(1)
+  })
+
+  it('asks if theme is installed if theme cannot be loaded and exits with failure code', async () => {
+    const resume = {}
+
+    jest.mocked(fs.readFile).mockResolvedValueOnce(JSON.stringify(resume))
+
+    await cli.parse(['', '', 'render', '--theme', 'jsonresume-theme-missing'])
+
+    expect(fs.readFile).toHaveBeenCalledTimes(1)
+    expect(fs.readFile).toHaveBeenCalledWith('resume.json', 'utf-8')
+
+    expect(errorSpy).toHaveBeenCalledTimes(1)
+    expect(errorSpy.mock.calls[0][0]).toMatchInlineSnapshot(
+      `"Could not load theme [33mjsonresume-theme-missing[39m. Is it installed?"`,
     )
 
     expect(render).not.toHaveBeenCalled()
@@ -266,8 +238,8 @@ describe('validate', () => {
 
     await cli.parse(['', '', 'validate'])
 
-    expect(logSpy).toHaveBeenCalledTimes(errors.length + 1)
-    expect(logSpy.mock.calls.join('\n')).toMatchInlineSnapshot(`
+    expect(errorSpy).toHaveBeenCalledTimes(errors.length + 1)
+    expect(errorSpy.mock.calls.join('\n')).toMatchInlineSnapshot(`
       "Uh-oh! The following errors were found in [33mresume.json[39m:
 
        [31m❌ message 0[39m at [33mpath 0[39m.
