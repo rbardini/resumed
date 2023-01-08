@@ -46,9 +46,6 @@
   },
   "dependencies": {
     "colorette": "^2.0.0",
-    "escalade": "^3.1.0",
-    "globby": "^11.0.0",
-    "lodash.uniqby": "^4.7.0",
     "resume-schema": "^1.0.0",
     "sade": "^1.7.0"
   },
