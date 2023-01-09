@@ -27,39 +27,38 @@
     "email": "rafael@rbardini.com",
     "url": "https://rbardini.com/"
   },
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
-  "bin": {
-    "resumed": "bin/resumed.js"
-  },
+  "type": "module",
+  "exports": "./dist/resumed.js",
+  "typings": "./dist/index.d.ts",
+  "bin": "./bin/resumed.js",
   "files": [
     "bin",
-    "dist",
-    "src"
+    "dist"
   ],
   "scripts": {
-    "build": "dts build --format cjs --target node",
-    "lint": "dts lint src test",
+    "build": "vite build",
     "prepare": "husky install && npm run build",
-    "start": "dts watch --format cjs --target node",
-    "test": "dts test"
+    "start": "vite build --watch",
+    "test": "FORCE_COLOR=0 vitest"
   },
   "dependencies": {
-    "colorette": "^2.0.0",
     "resume-schema": "^1.0.0",
-    "sade": "^1.7.0"
+    "sade": "^1.7.0",
+    "yoctocolors": "^1.0.0"
   },
   "devDependencies": {
-    "@types/lodash.uniqby": "4.7.7",
-    "dts-cli": "1.5.1",
-    "husky": "8.0.1",
-    "jsonresume-theme-even": "0.17.0",
-    "lint-staged": "12.4.1",
-    "prettier-plugin-packagejson": "2.2.18",
-    "tslib": "2.4.0",
-    "typescript": "4.6.4"
+    "@vitest/coverage-c8": "0.27.1",
+    "husky": "8.0.3",
+    "jsonresume-theme-even": "0.17.1",
+    "lint-staged": "13.1.0",
+    "prettier-plugin-packagejson": "2.3.0",
+    "tslib": "2.4.1",
+    "typescript": "4.9.4",
+    "vite": "4.0.4",
+    "vite-plugin-dts": "1.7.1",
+    "vitest": "0.27.1"
   },
   "engines": {
-    "node": ">=12"
+    "node": ">=14.16"
   }
 }

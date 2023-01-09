@@ -1,10 +1,13 @@
-#!/usr/bin/env node
-import { promises as fs } from 'fs'
-import { red, yellow } from 'colorette'
+import { readFile, writeFile } from 'node:fs/promises'
+import { red, yellow } from 'yoctocolors'
 import sade from 'sade'
 import { init, render, validate } from '.'
 
-const pkg = require('../package.json')
+// Trick Rollup into not bundling package.json
+const pkgPath = '../package.json'
+const pkg = JSON.parse(
+  await readFile(new URL(pkgPath, import.meta.url), 'utf-8'),
+)
 
 type RenderOptions = {
   output: string
@@ -25,7 +28,7 @@ cli
       filename: string = 'resume.json',
       { output, theme }: RenderOptions,
     ) => {
-      const resume = JSON.parse(await fs.readFile(filename, 'utf-8'))
+      const resume = JSON.parse(await readFile(filename, 'utf-8'))
 
       const themeName = theme ?? resume?.meta?.theme
       if (!themeName) {
@@ -52,7 +55,7 @@ cli
       }
 
       const rendered = await render(resume, themeModule)
-      await fs.writeFile(output, rendered)
+      await writeFile(output, rendered)
 
       console.log(
         `You can find your rendered resume at ${yellow(output)}. Nice work! 🚀`,
