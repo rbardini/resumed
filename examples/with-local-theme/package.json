@@ -3,10 +3,10 @@
   "type": "module",
   "scripts": {
     "init": "resumed init",
-    "start": "resumed"
+    "start": "resumed --theme jsonresume-theme-local"
   },
   "dependencies": {
     "jsonresume-theme-local": "file:./theme",
-    "resumed": "^1.0.0"
+    "resumed": "^2.0.0"
   }
 }

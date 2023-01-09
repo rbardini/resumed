@@ -7,10 +7,9 @@
 
 👔 Lightweight [JSON Resume](https://jsonresume.org/) builder, no-frills [alternative to resume-cli](#motivation).
 
-- 🗜️ Small (~125 lines)
+- 🗜️ Small (~120 LOC)
 - 🧩 CLI and Node.js API
 - 🤖 TypeScript typings
-- 🎨 Theme auto-load
 - ⏱️ Async render support
 - 🧪 100% code coverage
 
@@ -19,8 +18,6 @@
 ```shell
 npm install resumed jsonresume-theme-even # or your theme of choice
 ```
-
-ℹ️ Global installation is not supported, as it breaks theme discovery.
 
 ## Usage
 
@@ -59,7 +56,7 @@ Render resume.
 **Options:**
 
 - `-o`, `--output`: Output filename (default `resume.html`)
-- `-t`, `--theme`: Theme to use, if more than one is installed
+- `-t`, `--theme`: Theme to use
 - `-h`, `--help`: Display help message
 
 ### `init`
@@ -92,9 +89,9 @@ Resumed is a _complete reimplementation_ of resume-cli, using more modern techno
 
 ### Theme resolution
 
-Resumed automatically loads and uses the first installed [theme](https://www.npmjs.com/search?q=jsonresume-theme) found when rendering (exporting) a resume, similar to how [Prettier plugins](https://prettier.io/docs/en/plugins.html#using-plugins) work. If no theme is installed, Resumed will guide you on how to proceed. It will also let you know if _multiple_ themes are found, which one it picked, and how to [use another one](#render-default).
+Resumed does not install any themes. You must [pick and install one](https://www.npmjs.com/search?q=jsonresume-theme) yourself, and specify your choice via the `--theme` option or the `.meta.theme` field of your resume.
 
-In contrast, resume-cli comes with a theme, and requires specifying what theme to use if the default does not suit you. This is fine for most users, but it ties the default theme package release cycle to that of the CLI, and is a little more verbose.
+In contrast, resume-cli comes with a default theme, and only supports the `--theme` option. This is fine for most users, but it ties the default theme package release cycle to that of the CLI, and may be a little more verbose.
 
 ### Interface
 

@@ -2,7 +2,7 @@
 import { promises as fs } from 'fs'
 import { red, yellow } from 'colorette'
 import sade from 'sade'
-import { init, loadThemes, render, validate } from '.'
+import { init, render, validate } from '.'
 
 const pkg = require('../package.json')
 
@@ -19,39 +19,39 @@ cli
     default: true,
   })
   .option('-o, --output', 'Output filename', 'resume.html')
-  .option('-t, --theme', 'Theme to use, if more than one is installed')
+  .option('-t, --theme', 'Theme to use')
   .action(
     async (
       filename: string = 'resume.json',
       { output, theme }: RenderOptions,
     ) => {
       const resume = JSON.parse(await fs.readFile(filename, 'utf-8'))
-      const [loadedTheme, ...otherLoadedThemes] = await loadThemes(theme)
 
-      if (loadedTheme == null) {
-        console.log(
-          `Could not find a JSON Resume theme to render. Try installing one (e.g. ${yellow(
-            'npm i jsonresume-theme-even',
-          )}) and run the command again. 😉`,
+      const themeName = theme ?? resume?.meta?.theme
+      if (!themeName) {
+        console.error(
+          `No theme to use. Please specify one via the ${yellow(
+            '--theme',
+          )} option or the ${yellow('.meta.theme')} field of your resume.`,
         )
 
         process.exitCode = 1
         return
       }
 
-      if (otherLoadedThemes.length > 0) {
-        console.log(
-          `Found ${
-            otherLoadedThemes.length + 1
-          } JSON Resume themes installed, defaulting to ${yellow(
-            loadedTheme.name,
-          )}. Pass the ${yellow(
-            '--theme',
-          )} option if you would like to use another one.`,
+      let themeModule
+      try {
+        themeModule = await import(themeName)
+      } catch {
+        console.error(
+          `Could not load theme ${yellow(themeName)}. Is it installed?`,
         )
+
+        process.exitCode = 1
+        return
       }
 
-      const rendered = await render(resume, loadedTheme.module)
+      const rendered = await render(resume, themeModule)
       await fs.writeFile(output, rendered)
 
       console.log(
@@ -82,11 +82,11 @@ cli
         throw err
       }
 
-      console.log(
+      console.error(
         `Uh-oh! The following errors were found in ${yellow(filename)}:\n`,
       )
       err.forEach((err: { message: string; path: string }) =>
-        console.log(` ${red(`❌ ${err.message}`)} at ${yellow(err.path)}.`),
+        console.error(` ${red(`❌ ${err.message}`)} at ${yellow(err.path)}.`),
       )
 
       process.exitCode = 1
