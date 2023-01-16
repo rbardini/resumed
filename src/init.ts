@@ -1,6 +1,6 @@
-import { promises as fs } from 'fs'
+import { writeFile } from 'node:fs/promises'
 
 export const init = (filename: string) => {
   const resume = require('resume-schema/sample.resume.json')
-  return fs.writeFile(filename, JSON.stringify(resume, undefined, 2))
+  return writeFile(filename, JSON.stringify(resume, undefined, 2))
 }

@@ -1,7 +1,7 @@
 # Resumed
 
 [![npm package version](https://img.shields.io/npm/v/resumed)](https://www.npmjs.com/package/resumed)
-[![Build status](https://img.shields.io/github/workflow/status/rbardini/resumed/Main)](https://github.com/rbardini/resumed/actions)
+[![Build status](https://img.shields.io/github/actions/workflow/status/rbardini/resumed/main.yml)](https://github.com/rbardini/resumed/actions)
 [![Code coverage](https://img.shields.io/codecov/c/github/rbardini/resumed.svg)](https://codecov.io/gh/rbardini/resumed)
 [![Dependencies status](https://img.shields.io/librariesio/release/npm/resumed)](https://libraries.io/npm/resumed)
 
