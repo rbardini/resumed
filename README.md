@@ -8,6 +8,7 @@
 👔 Lightweight [JSON Resume](https://jsonresume.org/) builder, no-frills [alternative to resume-cli](#motivation).
 
 - 🗜️ Small (~120 LOC)
+- 📦 Pure ESM package
 - 🧩 CLI and Node.js API
 - 🤖 TypeScript typings
 - ⏱️ Async render support
