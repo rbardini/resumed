@@ -7,6 +7,6 @@
   },
   "dependencies": {
     "jsonresume-theme-local": "file:./theme",
-    "resumed": "^2.0.0"
+    "resumed": "^3.0.0"
   }
 }
