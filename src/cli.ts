@@ -22,6 +22,51 @@ type RenderOptions = {
 
 export const cli = sade(pkg.name).version(pkg.version)
 
+export const cliRender = async (
+  filename: string,
+  theme?: string,
+): Promise<string> => {
+  let resumeJSON
+  try {
+    resumeJSON = await readFile(filename, 'utf-8')
+  } catch (err) {
+    throw new Error(
+      `Could not load resume from ${yellow(filename)} - does it exist?`,
+    )
+  }
+
+  let resume
+  try {
+    resume = JSON.parse(resumeJSON)
+  } catch (err) {
+    throw new Error(`Could not load resume`)
+  }
+
+  const themeName = theme ?? resume?.meta?.theme
+  if (!themeName) {
+    throw new Error(
+      `No theme to use. Please specify one via the ${yellow('--theme')}
+      option or the ${yellow('.meta.theme')} field of your resume.`,
+    )
+  }
+
+  let themeModule
+  try {
+    themeModule = await import(themeName)
+  } catch {
+    throw new Error(
+      `Could not load theme ${yellow(themeName)}. Is it installed?`,
+    )
+  }
+
+  try {
+    const rendered = await render(resume, themeModule)
+    return rendered
+  } catch (err) {
+    throw new Error(`Could not render resume: ${err}`)
+  }
+}
+
 cli
   .command('render [filename]', 'Render resume', {
     alias: 'export',
@@ -34,33 +79,15 @@ cli
       filename: string = 'resume.json',
       { output, theme }: RenderOptions,
     ) => {
-      const resume = JSON.parse(await readFile(filename, 'utf-8'))
-
-      const themeName = theme ?? resume?.meta?.theme
-      if (!themeName) {
-        console.error(
-          `No theme to use. Please specify one via the ${yellow(
-            '--theme',
-          )} option or the ${yellow('.meta.theme')} field of your resume.`,
-        )
-
-        process.exitCode = 1
-        return
-      }
-
-      let themeModule
+      let rendered
       try {
-        themeModule = await import(themeName)
-      } catch {
-        console.error(
-          `Could not load theme ${yellow(themeName)}. Is it installed?`,
-        )
-
+        rendered = await cliRender(filename, theme)
+      } catch (err) {
+        console.error(err)
         process.exitCode = 1
         return
       }
 
-      const rendered = await render(resume, themeModule)
       await writeFile(output, rendered)
 
       console.log(
@@ -102,61 +129,41 @@ cli
     }
   })
 
+type ServeOptions = {
+  port: number
+  theme?: string
+}
+
 cli
   .command('serve [filename]', 'Serve resume')
   .option('-t, --theme', 'Theme to use')
   .option('-p, --port', 'Port to use', 3000)
   .action(
-    async (
-      filename: string = 'resume.json',
-      port: number = 3000,
-      theme: string,
-    ) => {
+    async (filename: string = 'resume.json', { port, theme }: ServeOptions) => {
       const app = express()
       app.use(connectLiveReload())
 
       const liveReloadServer = livereload.createServer({
         extraExts: ['json'],
-        debug: true,
       })
       liveReloadServer.watch(filename)
 
       app.get('/', async (_, res) => {
-        const resume = JSON.parse(await readFile(filename, 'utf-8'))
-        const themeName = theme ?? resume?.meta?.theme
-        if (!themeName) {
-          console.error(
-            `No theme to use. Please specify one via the ${yellow(
-              '--theme',
-            )} option or the ${yellow('.meta.theme')} field of your resume.`,
-          )
-          const msg = `No theme to use. Please restart the server with the '--theme' option or set the '.meta.theme' field of your resume.`
-          res.send(
-            `<html><head><title>Error</title><body><pre>${msg}</pre></body></html>`,
-          )
-          return
-        }
-
-        let themeModule
+        let rendered
         try {
-          themeModule = await import(themeName)
-        } catch {
-          console.error(
-            `Could not load theme ${yellow(themeName)}. Is it installed?`,
-          )
-
-          const msg = `Could not load theme ${themeName}. Is it installed?`
+          rendered = await cliRender(filename, theme)
+          res.send(rendered)
+        } catch (err) {
+          const msg = `Could not render resume: ${err}`
+          console.error(msg)
           res.send(
             `<html><head><title>Error</title><body><pre>${msg}</pre></body></html>`,
           )
-          return
         }
-
-        res.send(await render(resume, themeModule))
       })
 
       app.listen(port, () => {
-        console.log(`Resume available at http://0.0.0.0:${port}/`)
+        console.log(`Resume available at ${yellow(`http://0.0.0.0:${port}`)}`)
       })
     },
   )
@@ -176,30 +183,15 @@ cli
           console.log(`Watching for changes to ${yellow(filename)}...`)
         })
         .on('change', async () => {
-          const resume = JSON.parse(await readFile(filename, 'utf-8'))
-          const themeName = theme ?? resume?.meta?.theme
-          if (!themeName) {
-            console.error(
-              `No theme to use. Please specify one via the ${yellow(
-                '--theme',
-              )} option or the ${yellow('.meta.theme')} field of your resume.`,
-            )
-            return
-          }
-
-          let themeModule
+          let rendered
           try {
-            themeModule = await import(themeName)
-          } catch {
-            console.error(
-              `Could not load theme ${yellow(themeName)}. Is it installed?`,
-            )
+            rendered = await cliRender(filename, theme)
+          } catch (err) {
+            console.error(err)
             return
           }
 
-          const rendered = await render(resume, themeModule)
           await writeFile(output, rendered)
-
           console.log(
             `${yellow(filename)} updated, re-rendered to ${yellow(output)}.`,
           )
