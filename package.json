@@ -64,11 +64,20 @@
     "prettier-plugin-organize-imports": "4.0.0",
     "prettier-plugin-packagejson": "2.5.2",
     "publint": "0.2.10",
+    "puppeteer": "23.2.1",
     "tslib": "2.7.0",
     "typescript": "5.5.4",
     "vite": "5.4.2",
     "vite-plugin-dts": "4.0.3",
     "vitest": "2.0.5"
+  },
+  "peerDependencies": {
+    "puppeteer": "^23.0.0"
+  },
+  "peerDependenciesMeta": {
+    "puppeteer": {
+      "optional": true
+    }
   },
   "engines": {
     "node": ">=20"
