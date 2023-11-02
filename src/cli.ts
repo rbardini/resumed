@@ -1,8 +1,20 @@
 import { readFile, writeFile } from 'node:fs/promises'
+import { basename, extname } from 'node:path'
 import sade from 'sade'
 import stripJsonComments from 'strip-json-comments'
 import { red, yellow } from 'yoctocolors'
-import { init, render, validate } from './index.js'
+import { init, pdf, render, validate } from './index.js'
+import type { Resume, Theme } from './types.js'
+
+type RenderOptions = {
+  output?: string
+  theme?: string
+}
+
+enum OutputFormat {
+  Html = 'html',
+  Pdf = 'pdf',
+}
 
 // Trick Rollup into not bundling package.json
 const pkgPath = '../package.json'
@@ -10,53 +22,47 @@ const pkg = JSON.parse(
   await readFile(new URL(pkgPath, import.meta.url), 'utf-8'),
 )
 
-type RenderOptions = {
-  output: string
-  theme?: string
+const DEFAULT_FILENAME = 'resume.json'
+
+const getOutputFilename = (filename: string, ext: string) =>
+  [basename(filename, extname(filename)), ext].join('.')
+
+const getResume = async (filename: string) =>
+  JSON.parse(stripJsonComments(await readFile(filename, 'utf-8')))
+
+const getThemeModule = async (resume: Resume, theme?: string) => {
+  const themeName = theme ?? resume?.meta?.theme
+  if (!themeName) {
+    throw new Error(
+      `No theme to use. Please specify one via the ${yellow('--theme')} option or the ${yellow('.meta.theme')} field of your resume.`,
+    )
+  }
+
+  try {
+    return (await import(themeName)) as Theme
+  } catch {
+    throw new Error(
+      `Could not load theme ${yellow(themeName)}. Is it installed?`,
+    )
+  }
 }
 
 export const cli = sade(pkg.name).version(pkg.version)
 
 cli
-  .command('render [filename]', 'Render resume', {
-    alias: 'export',
-    default: true,
-  })
-  .option('-o, --output', 'Output filename', 'resume.html')
+  .command('render [filename]', 'Render resume', { default: true })
+  .option('-o, --output', 'Output filename')
   .option('-t, --theme', 'Theme to use')
   .action(
     async (
-      filename: string = 'resume.json',
-      { output, theme }: RenderOptions,
+      filename: string = DEFAULT_FILENAME,
+      {
+        output = getOutputFilename(filename, OutputFormat.Html),
+        theme,
+      }: RenderOptions,
     ) => {
-      const resume = JSON.parse(
-        stripJsonComments(await readFile(filename, 'utf-8')),
-      )
-
-      const themeName = theme ?? resume?.meta?.theme
-      if (!themeName) {
-        console.error(
-          `No theme to use. Please specify one via the ${yellow(
-            '--theme',
-          )} option or the ${yellow('.meta.theme')} field of your resume.`,
-        )
-
-        process.exitCode = 1
-        return
-      }
-
-      let themeModule
-      try {
-        themeModule = await import(themeName)
-      } catch {
-        console.error(
-          `Could not load theme ${yellow(themeName)}. Is it installed?`,
-        )
-
-        process.exitCode = 1
-        return
-      }
-
+      const resume = await getResume(filename)
+      const themeModule = await getThemeModule(resume, theme)
       const rendered = await render(resume, themeModule)
       await writeFile(output, rendered)
 
@@ -67,19 +73,41 @@ cli
   )
 
 cli
+  .command('export [filename]', 'Export resume to PDF')
+  .option('-o, --output', 'Output filename')
+  .option('-t, --theme', 'Theme to use')
+  .action(
+    async (
+      filename: string = DEFAULT_FILENAME,
+      {
+        output = getOutputFilename(filename, OutputFormat.Pdf),
+        theme,
+      }: RenderOptions,
+    ) => {
+      const resume = await getResume(filename)
+      const themeModule = await getThemeModule(resume, theme)
+      const rendered = await render(resume, themeModule)
+      const exported = await pdf(rendered, resume, themeModule)
+      await writeFile(output, exported)
+
+      console.log(
+        `You can find your exported resume at ${yellow(output)}. Nice work! 🚀`,
+      )
+    },
+  )
+
+cli
   .command('init [filename]', 'Create sample resume', { alias: 'create' })
-  .action(async (filename: string = 'resume.json') => {
+  .action(async (filename: string = DEFAULT_FILENAME) => {
     await init(filename)
     console.log(
-      `Done! Start editing ${yellow(filename)} now, and run the ${yellow(
-        'render',
-      )} command when you are ready. 👍`,
+      `Done! Start editing ${yellow(filename)} now, and run the ${yellow('render')} command when you are ready. 👍`,
     )
   })
 
 cli
   .command('validate [filename]', 'Validate resume')
-  .action(async (filename: string = 'resume.json') => {
+  .action(async (filename: string = DEFAULT_FILENAME) => {
     try {
       await validate(filename)
       console.log(`Your ${yellow(filename)} looks amazing! ✨`)

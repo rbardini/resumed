@@ -107,11 +107,11 @@ describe('render', () => {
     expect(render).toHaveBeenCalledWith(resume, theme)
 
     expect(writeFile).toHaveBeenCalledTimes(1)
-    expect(writeFile).toHaveBeenCalledWith('resume.html', 'rendered')
+    expect(writeFile).toHaveBeenCalledWith('custom.html', 'rendered')
 
     expect(logSpy).toHaveBeenCalledTimes(1)
     expect(logSpy.mock.calls.join('\n')).toMatchInlineSnapshot(
-      `"You can find your rendered resume at resume.html. Nice work! 🚀"`,
+      `"You can find your rendered resume at custom.html. Nice work! 🚀"`,
     )
   })
 
