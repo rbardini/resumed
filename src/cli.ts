@@ -31,7 +31,7 @@ const getResume = async (filename: string) =>
   JSON.parse(stripJsonComments(await readFile(filename, 'utf-8')))
 
 const getThemeModule = async (resume: Resume, theme?: string) => {
-  const themeName = theme ?? resume?.meta?.theme
+  const themeName = theme ?? (resume?.meta?.['theme'] as string | undefined)
   if (!themeName) {
     throw new Error(
       `No theme to use. Please specify one via the ${yellow('--theme')} option or the ${yellow('.meta.theme')} field of your resume.`,

@@ -41,6 +41,7 @@
     "dist"
   ],
   "scripts": {
+    "prebuild": "json2ts node_modules/@jsonresume/schema/schema.json src/resume-schema.d.ts",
     "build": "vite build",
     "format": "prettier .",
     "lint": "publint",
@@ -58,6 +59,7 @@
     "@types/node": "20.16.1",
     "@vitest/coverage-v8": "2.0.5",
     "husky": "9.1.5",
+    "json-schema-to-typescript": "13.1.1",
     "jsonresume-theme-even": "0.22.1",
     "lint-staged": "15.2.9",
     "prettier": "3.3.3",

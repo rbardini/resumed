@@ -7,3 +7,4 @@ examples/**/package-lock.json
 resume.html
 resume.json
 resume.pdf
+src/resume-schema.d.ts
