@@ -17,7 +17,7 @@
 ## Installation
 
 ```shell
-npm install resumed jsonresume-theme-even # or your theme of choice
+npm -g install resumed jsonresume-theme-even # or your theme of choice
 ```
 
 ## Usage
