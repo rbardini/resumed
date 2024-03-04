@@ -13,7 +13,17 @@ export default defineConfig({
     },
     target: 'esnext',
   },
-  plugins: [dts()],
+  plugins: [
+    dts({
+      rollupTypes: true,
+      beforeWriteFile: (filepath, content) => {
+        return {
+          filePath: filepath.replace('index', 'resumed'),
+          content: content,
+        }
+      },
+    }),
+  ],
   test: {
     clearMocks: true,
   },
