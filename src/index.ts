@@ -1,4 +1,4 @@
-export { cli } from './cli'
-export { init } from './init'
-export { render } from './render'
-export { validate } from './validate'
+export { cli } from './cli.js'
+export { init } from './init.js'
+export { render } from './render.js'
+export { validate } from './validate.js'

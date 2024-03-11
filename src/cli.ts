@@ -1,7 +1,7 @@
 import { readFile, writeFile } from 'node:fs/promises'
 import { red, yellow } from 'yoctocolors'
 import sade from 'sade'
-import { init, render, validate } from '.'
+import { init, render, validate } from './index.js'
 
 // Trick Rollup into not bundling package.json
 const pkgPath = '../package.json'
