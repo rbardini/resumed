@@ -28,7 +28,12 @@
     "url": "https://rbardini.com/"
   },
   "type": "module",
-  "exports": "./dist/resumed.js",
+  "exports": {
+    ".": {
+      "default": "./dist/resumed.js",
+      "types": "./dist/resumed.d.ts"
+    }
+  },
   "bin": "./bin/resumed.js",
   "files": [
     "bin",
@@ -38,7 +43,8 @@
     "build": "vite build",
     "prepare": "husky install && npm run build",
     "start": "vite build --watch",
-    "test": "FORCE_COLOR=0 vitest"
+    "test": "FORCE_COLOR=0 vitest",
+    "clean": "npx rimraf dist"
   },
   "dependencies": {
     "resume-schema": "^1.0.0",
