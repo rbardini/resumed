@@ -45,10 +45,17 @@ cli
       let themeModule
       try {
         themeModule = await import(themeName)
-      } catch {
-        console.error(
-          `Could not load theme ${yellow(themeName)}. Is it installed?`,
-        )
+      } catch (error: any) {
+        // XXX Different error message in test than on command line.
+        if (/(Cannot find package|Does the file exist\?)/.test(error.message)) {
+          //  ^ command line      ^ test
+          console.error(
+            `Could not load theme ${yellow(themeName)}. Is it installed?`,
+          )
+        } else {
+          console.error(yellow('Theme Error'))
+          throw error
+        }
 
         process.exitCode = 1
         return

@@ -189,6 +189,31 @@ describe('render', () => {
     expect(render).not.toHaveBeenCalled()
     expect(process.exitCode).toBe(1)
   })
+
+  it('propagates original error if theme is broken', async() => {
+    const resume = {}
+
+    vi.mocked(readFile).mockResolvedValueOnce(JSON.stringify(resume))
+
+    await expect(() => cli.parse(['', '', 'render', '--theme', 'jsonresume-theme-broken'])).rejects.toThrow(new SyntaxError(
+      "Failed to parse source for import analysis because the content contains invalid JS syntax. If you are using JSX, make sure to name the file with the .jsx or .tsx extension."
+      // XXX The above is what I observe in test but on the command line I get the more helpful:
+      // /path/to/resumed/test/jsonresume-theme-broken/index.js:1
+      // );
+      // ^
+
+      // SyntaxError: Unexpected token ')'
+    ))
+
+    expect(readFile).toHaveBeenCalledTimes(1)
+    expect(readFile).toHaveBeenCalledWith('resume.json', 'utf-8')
+
+    expect(errorSpy).toHaveBeenCalledTimes(1)
+    expect(errorSpy.mock.calls[0][0]).toMatchInlineSnapshot(`"Theme Error"`)
+
+    expect(render).not.toHaveBeenCalled()
+    expect(process.exitCode).toBe(1)
+  })
 })
 
 describe('validate', () => {
