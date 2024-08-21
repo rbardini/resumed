@@ -7,7 +7,7 @@
 
 👔 Lightweight [JSON Resume](https://jsonresume.org/) builder, no-frills [alternative to resume-cli](#motivation).
 
-- 🗜️ Small (~120 LOC)
+- 🗜️ Small (~180 LOC)
 - 📦 Pure ESM package
 - 🧩 CLI and Node.js API
 - 🤖 TypeScript typings
@@ -30,12 +30,13 @@ $ resumed --help
 
   Available Commands
     render      Render resume
+    export      Export resume to PDF
     init        Create sample resume
     validate    Validate resume
 
   For more info, run any command with the `--help` flag
     $ resumed render --help
-    $ resumed init --help
+    $ resumed export --help
 
   Options
     -v, --version    Displays current version
@@ -52,13 +53,23 @@ Render resume.
 
 **Usage:** `resumed render [filename] [options]`
 
-**Aliases:** `export`
+**Options:**
+
+- `-o`, `--output`: Output filename
+- `-t`, `--theme`: Theme to use
+- `-h`, `--help`: Display help message
+
+### `export`
+
+Export resume to PDF.
+
+**Usage:** `resumed export [filename] [options]`
 
 **Options:**
 
-- `-o`, `--output`: Output filename (default `resume.html`)
-- `-t`, `--theme`: Theme to use
-- `-h`, `--help`: Display help message
+- `-o, --output`: Output filename
+- `-t, --theme`: Theme to use
+- `-h, --help`: Displays help message
 
 ### `init`
 
@@ -100,4 +111,4 @@ While both tools can be used from the command line, Resumed also provides a full
 
 ### Other features
 
-Resumed makes some compromises in terms of features, such as no PDF export, local previews or YAML format support. If you miss any of these, you can combine Resumed with other tools, (e.g. Puppeteer for PDF generation, see [example](examples/with-pdf-export/)) or continue using resume-cli.
+Resumed makes some compromises in terms of features, such as no local previews or YAML format support. If you miss any of these, you can combine Resumed with other tools or continue using resume-cli.
