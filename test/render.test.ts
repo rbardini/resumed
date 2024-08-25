@@ -1,8 +1,8 @@
 import { expect, it, vi } from 'vitest'
-import { render } from '../src/render'
+import { render } from '../src/render.js'
 
 it('renders a theme', () => {
-  const resume = require('resume-schema/sample.resume.json')
+  const resume = require('@jsonresume/schema/sample.resume.json')
   const theme = {
     render: vi.fn(({ basics: { name } }) => name),
   }

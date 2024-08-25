@@ -5,6 +5,6 @@ import { createRequire } from 'node:module'
 const require = createRequire(import.meta.url)
 
 export const init = (filename: string) => {
-  const resume = require('resume-schema/sample.resume.json')
+  const resume = require('@jsonresume/schema/sample.resume.json')
   return writeFile(filename, JSON.stringify(resume, undefined, 2))
 }

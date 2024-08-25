@@ -1,11 +1,13 @@
 import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
-import pkg from './package.json' assert { type: 'json' }
+import { coverageConfigDefaults } from 'vitest/config'
+import pkg from './package.json' with { type: 'json' }
 
 export default defineConfig({
   build: {
     lib: {
       entry: './src/index.ts',
+      fileName: 'index',
       formats: ['es'],
     },
     rollupOptions: {
@@ -13,8 +15,15 @@ export default defineConfig({
     },
     target: 'esnext',
   },
-  plugins: [dts()],
+  plugins: [
+    dts({
+      copyDtsFiles: true,
+    }),
+  ],
   test: {
     clearMocks: true,
+    coverage: {
+      exclude: ['bin/**', 'examples/**', ...coverageConfigDefaults.exclude],
+    },
   },
 })

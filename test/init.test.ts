@@ -1,6 +1,6 @@
 import { writeFile } from 'node:fs/promises'
 import { expect, it, vi } from 'vitest'
-import { init } from '../src/init'
+import { init } from '../src/init.js'
 
 vi.mock('node:fs/promises', async () => ({
   writeFile: vi.fn(),

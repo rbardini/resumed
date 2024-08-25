@@ -1,6 +1,6 @@
+import schema from '@jsonresume/schema'
 import { readFile } from 'node:fs/promises'
 import { promisify } from 'node:util'
-import schema from 'resume-schema'
 
 const schemaValidate = promisify(schema.validate)
 

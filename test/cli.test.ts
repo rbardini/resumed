@@ -1,8 +1,8 @@
-import { readFile, writeFile } from 'node:fs/promises'
 import * as theme from 'jsonresume-theme-even'
+import { readFile, writeFile } from 'node:fs/promises'
 import { describe, expect, it, vi } from 'vitest'
-import { init, render, validate } from '../src'
-import { cli } from '../src/cli'
+import { cli } from '../src/cli.js'
+import { init, render, validate } from '../src/index.js'
 
 vi.mock('node:fs/promises', async () => ({
   readFile: vi

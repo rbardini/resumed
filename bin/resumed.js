@@ -1,3 +1,3 @@
 #!/usr/bin/env node
-import { cli } from '../dist/resumed.js'
+import { cli } from '../dist/index.js'
 cli.parse(process.argv)

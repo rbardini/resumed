@@ -4,8 +4,8 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "importHelpers": true,
-    "lib": ["ES2020"],
-    "module": "ESNext",
+    "lib": ["ESNext"],
+    "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "noEmit": true,
     "noEmitOnError": true,
@@ -19,7 +19,7 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
-    "target": "ES2020",
+    "target": "ESNext",
     "useDefineForClassFields": true
   },
   "include": ["src"]
