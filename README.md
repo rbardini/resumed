@@ -106,5 +106,5 @@ Resumed makes some compromises in terms of features, such as no PDF export, loca
 
 #### Is PDF as an output format supported? 
 
-No, unfortunately it is fairly complex to maintain a renderer for PDFs, [see more details here](https://github.com/rbardini/resumed/issues/3). It is recommended to print the HTML files to PDF yourself yourself.
+No, unfortunately it is fairly complex to maintain a renderer for PDFs, [see more details here](https://github.com/rbardini/resumed/issues/3). It is recommended to print the HTML files to PDF yourself.
 
