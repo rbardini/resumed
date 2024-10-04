@@ -101,3 +101,10 @@ While both tools can be used from the command line, Resumed also provides a full
 ### Other features
 
 Resumed makes some compromises in terms of features, such as no PDF export, local previews or YAML format support. If you miss any of these, you can combine Resumed with other tools, (e.g. Puppeteer for PDF generation, see [example](examples/with-pdf-export/)) or continue using resume-cli.
+
+## FAQ
+
+#### Is PDF as an output format supported? 
+
+No, unfortunately it is very complex to maintain a renderer for PDFs, [see more details here](https://github.com/rbardini/resumed/issues/3). It is recommended to print the HTML files to PDF yourself yourself.
+
