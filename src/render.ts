@@ -1,4 +1,4 @@
-type Theme<T> = {
+export type Theme<T> = {
   render: (resume: object) => T | Promise<T>
 }
 
