@@ -50,6 +50,7 @@
   },
   "dependencies": {
     "@jsonresume/schema": "^1.0.0",
+    "json5": "^2.2.3",
     "sade": "^1.7.0",
     "yoctocolors": "^2.0.0"
   },
