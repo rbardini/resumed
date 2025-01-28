@@ -51,6 +51,7 @@
   "dependencies": {
     "@jsonresume/schema": "^1.0.0",
     "sade": "^1.7.0",
+    "strip-json-comments": "^5.0.1",
     "yoctocolors": "^2.0.0"
   },
   "devDependencies": {

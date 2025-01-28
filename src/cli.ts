@@ -1,5 +1,6 @@
 import { readFile, writeFile } from 'node:fs/promises'
 import sade from 'sade'
+import stripJsonComments from 'strip-json-comments'
 import { red, yellow } from 'yoctocolors'
 import { init, render, validate } from './index.js'
 
@@ -28,7 +29,9 @@ cli
       filename: string = 'resume.json',
       { output, theme }: RenderOptions,
     ) => {
-      const resume = JSON.parse(await readFile(filename, 'utf-8'))
+      const resume = JSON.parse(
+        stripJsonComments(await readFile(filename, 'utf-8')),
+      )
 
       const themeName = theme ?? resume?.meta?.theme
       if (!themeName) {

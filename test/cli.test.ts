@@ -68,6 +68,23 @@ describe('render', () => {
     )
   })
 
+  it('renders a resume with comments ', async () => {
+    const resume = `//Template\n{"basics":{"name":"Benny"}}`
+
+    vi.mocked(readFile).mockResolvedValueOnce(resume)
+    vi.mocked(render).mockResolvedValueOnce('rendered')
+
+    await cli.parse(['', '', 'render', '--theme', 'jsonresume-theme-even'])
+
+    expect(readFile).toHaveBeenCalledTimes(1)
+    expect(readFile).toHaveBeenCalledWith('resume.json', 'utf-8')
+
+    expect(render).toHaveBeenCalledTimes(1)
+
+    expect(writeFile).toHaveBeenCalledTimes(1)
+    expect(writeFile).toHaveBeenCalledWith('resume.html', 'rendered')
+  })
+
   it('renders a resume with custom filename', async () => {
     const resume = {}
 
