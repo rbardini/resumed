@@ -174,7 +174,7 @@ describe('render', () => {
 
     vi.mocked(readFile).mockResolvedValueOnce(JSON.stringify(resume))
 
-    expect(() => cli.parse(['', '', 'render'])).rejects.toThrow(
+    await expect(() => cli.parse(['', '', 'render'])).rejects.toThrow(
       'No theme to use. Please specify one via the --theme option or the .meta.theme field of your resume.',
     )
 
@@ -189,7 +189,7 @@ describe('render', () => {
 
     vi.mocked(readFile).mockResolvedValueOnce(JSON.stringify(resume))
 
-    expect(() =>
+    await expect(() =>
       cli.parse(['', '', 'render', '--theme', 'jsonresume-theme-missing']),
     ).rejects.toThrow(
       'Could not load theme jsonresume-theme-missing. Is it installed?',
