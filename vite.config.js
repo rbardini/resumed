@@ -11,7 +11,11 @@ export default defineConfig({
       formats: ['es'],
     },
     rollupOptions: {
-      external: [...Object.keys(pkg.dependencies), /^node:.*/],
+      external: [
+        ...Object.keys(pkg.dependencies),
+        ...Object.keys(pkg.peerDependencies),
+        /^node:.*/,
+      ],
     },
     target: 'esnext',
   },

@@ -1,6 +1,3 @@
-type Theme<T> = {
-  render: (resume: object) => T | Promise<T>
-}
+import type { Resume, Theme } from './types.js'
 
-export const render = (resume: object, theme: Theme<string>) =>
-  theme.render(resume)
+export const render = (resume: Resume, theme: Theme) => theme.render(resume)

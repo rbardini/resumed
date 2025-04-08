@@ -1,6 +1,6 @@
 # PDF export example
 
-This example shows how to use Resumed with [Puppeteer](https://pptr.dev/) to export a resume to PDF.
+This example shows how to use Resumed with [Puppeteer](https://pptr.dev/) to manually export a resume to PDF.
 
 ## How to use
 
