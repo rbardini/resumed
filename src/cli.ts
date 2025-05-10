@@ -9,6 +9,7 @@ import type { Resume, Theme } from './types.js'
 type RenderOptions = {
   output?: string
   theme?: string
+  nosandbox: boolean
 }
 
 enum OutputFormat {
@@ -76,18 +77,21 @@ cli
   .command('export [filename]', 'Export resume to PDF')
   .option('-o, --output', 'Output filename')
   .option('-t, --theme', 'Theme to use')
+  .option('-n, --nosandbox', 'Launch puppeteer with --no-sandbox')
   .action(
     async (
       filename: string = DEFAULT_FILENAME,
       {
         output = getOutputFilename(filename, OutputFormat.Pdf),
         theme,
+        nosandbox,
       }: RenderOptions,
     ) => {
       const resume = await getResume(filename)
       const themeModule = await getThemeModule(resume, theme)
       const rendered = await render(resume, themeModule)
-      const exported = await pdf(rendered, resume, themeModule)
+      console.log('nosandbox is ' + nosandbox)
+      const exported = await pdf(rendered, resume, themeModule, nosandbox)
       await writeFile(output, exported)
 
       console.log(
