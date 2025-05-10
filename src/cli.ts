@@ -90,7 +90,6 @@ cli
       const resume = await getResume(filename)
       const themeModule = await getThemeModule(resume, theme)
       const rendered = await render(resume, themeModule)
-      console.log('nosandbox is ' + nosandbox)
       const exported = await pdf(rendered, resume, themeModule, nosandbox)
       await writeFile(output, exported)
 

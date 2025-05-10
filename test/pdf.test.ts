@@ -11,13 +11,22 @@ vi.mock('puppeteer', () => ({
   }),
 }))
 
-it('exports a resume to PDF', async () => {
+it('exports a resume to PDF with no-sandbox', async () => {
   const resume = require('@jsonresume/schema/sample.resume.json')
   const theme = {
     render: vi.fn(({ basics: { name } }) => name),
   }
 
-  await expect(pdf('html', resume, theme)).resolves.toBe('pdf')
+  await expect(pdf('html', resume, theme, true)).resolves.toBe('pdf')
+})
+
+it('exports a resume to PDF without no-sandbox', async () => {
+  const resume = require('@jsonresume/schema/sample.resume.json')
+  const theme = {
+    render: vi.fn(({ basics: { name } }) => name),
+  }
+
+  await expect(pdf('html', resume, theme, undefined)).resolves.toBe('pdf')
 })
 
 it('asks if Puppeteer package is installed if importing fails', async () => {
@@ -27,6 +36,6 @@ it('asks if Puppeteer package is installed if importing fails', async () => {
   }
 
   await expect(() =>
-    pdf('html', resume, theme, 'non-puppeteer'),
+    pdf('html', resume, theme, true, 'non-puppeteer'),
   ).rejects.toThrow('Could not import non-puppeteer package. Is it installed?')
 })

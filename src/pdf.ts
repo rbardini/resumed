@@ -6,7 +6,7 @@ export const pdf = async (
   html: string,
   resume: Resume,
   themeModule: Theme,
-  noSandbox: boolean,
+  noSandbox?: boolean,
   pptrModuleName = 'puppeteer',
 ) => {
   let puppeteer: PuppeteerNode
@@ -18,7 +18,6 @@ export const pdf = async (
       `Could not import ${yellow(pptrModuleName)} package. Is it installed?`,
     )
   }
-  console.log('noSandbox is ' + noSandbox)
   const puppeteerLaunchArgs = noSandbox ? { args: ['--no-sandbox'] } : {}
   const browser = await puppeteer.launch(puppeteerLaunchArgs)
   const page = await browser.newPage()
