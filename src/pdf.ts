@@ -1,5 +1,5 @@
+import { styleText } from 'node:util'
 import type { PuppeteerNode } from 'puppeteer'
-import { yellow } from 'yoctocolors'
 import type { Resume, Theme } from './types.js'
 
 export const pdf = async (
@@ -14,7 +14,7 @@ export const pdf = async (
     puppeteer = await import(pptrModuleName)
   } catch {
     throw new Error(
-      `Could not import ${yellow(pptrModuleName)} package. Is it installed?`,
+      `Could not import ${styleText('yellow', pptrModuleName)} package. Is it installed?`,
     )
   }
 

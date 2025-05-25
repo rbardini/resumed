@@ -47,13 +47,12 @@
     "lint": "publint",
     "prepare": "husky && npm run build",
     "start": "vite build --watch",
-    "test": "FORCE_COLOR=0 vitest"
+    "test": "vitest"
   },
   "dependencies": {
     "@jsonresume/schema": "^1.0.0",
     "sade": "^1.7.0",
-    "strip-json-comments": "^5.0.0",
-    "yoctocolors": "^2.0.0"
+    "strip-json-comments": "^5.0.0"
   },
   "devDependencies": {
     "@types/node": "22.14.0",
@@ -82,6 +81,6 @@
     }
   },
   "engines": {
-    "node": ">=20"
+    "node": "^20.12 || >=21.7"
   }
 }
