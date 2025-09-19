@@ -1,5 +1,5 @@
+import { styleText } from 'node:util'
 import type { PuppeteerNode } from 'puppeteer'
-import { yellow } from 'yoctocolors'
 import type { Resume, Theme } from './types.js'
 
 type PuppeteerOptions = {
@@ -19,7 +19,7 @@ export const pdf = async (
     puppeteer = await import(moduleName)
   } catch {
     throw new Error(
-      `Could not import ${yellow(moduleName)} package. Is it installed?`,
+      `Could not import ${styleText('yellow', moduleName)} package. Is it installed?`,
     )
   }
   const browser = await puppeteer.launch({ args })

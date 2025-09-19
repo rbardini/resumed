@@ -1,8 +1,8 @@
 import { readFile, writeFile } from 'node:fs/promises'
 import { basename, extname } from 'node:path'
+import { styleText } from 'node:util'
 import sade from 'sade'
 import stripJsonComments from 'strip-json-comments'
-import { red, yellow } from 'yoctocolors'
 import { init, pdf, render, validate } from './index.js'
 import type { Resume, Theme } from './types.js'
 
@@ -38,7 +38,7 @@ const getThemeModule = async (resume: Resume, theme?: string) => {
   const themeName = theme ?? (resume?.meta?.['theme'] as string | undefined)
   if (!themeName) {
     throw new Error(
-      `No theme to use. Please specify one via the ${yellow('--theme')} option or the ${yellow('.meta.theme')} field of your resume.`,
+      `No theme to use. Please specify one via the ${styleText('yellow', '--theme')} option or the ${styleText('yellow', '.meta.theme')} field of your resume.`,
     )
   }
 
@@ -46,7 +46,7 @@ const getThemeModule = async (resume: Resume, theme?: string) => {
     return (await import(themeName)) as Theme
   } catch {
     throw new Error(
-      `Could not load theme ${yellow(themeName)}. Is it installed?`,
+      `Could not load theme ${styleText('yellow', themeName)}. Is it installed?`,
     )
   }
 }
@@ -71,7 +71,7 @@ cli
       await writeFile(output, rendered)
 
       console.log(
-        `You can find your rendered resume at ${yellow(output)}. Nice work! 🚀`,
+        `You can find your rendered resume at ${styleText('yellow', output)}. Nice work! 🚀`,
       )
     },
   )
@@ -99,7 +99,7 @@ cli
       await writeFile(output, exported)
 
       console.log(
-        `You can find your exported resume at ${yellow(output)}. Nice work! 🚀`,
+        `You can find your exported resume at ${styleText('yellow', output)}. Nice work! 🚀`,
       )
     },
   )
@@ -109,7 +109,7 @@ cli
   .action(async (filename: string = DEFAULT_FILENAME) => {
     await init(filename)
     console.log(
-      `Done! Start editing ${yellow(filename)} now, and run the ${yellow('render')} command when you are ready. 👍`,
+      `Done! Start editing ${styleText('yellow', filename)} now, and run the ${styleText('yellow', 'render')} command when you are ready. 👍`,
     )
   })
 
@@ -118,17 +118,19 @@ cli
   .action(async (filename: string = DEFAULT_FILENAME) => {
     try {
       await validate(filename)
-      console.log(`Your ${yellow(filename)} looks amazing! ✨`)
+      console.log(`Your ${styleText('yellow', filename)} looks amazing! ✨`)
     } catch (err) {
       if (!Array.isArray(err)) {
         throw err
       }
 
       console.error(
-        `Uh-oh! The following errors were found in ${yellow(filename)}:\n`,
+        `Uh-oh! The following errors were found in ${styleText('yellow', filename)}:\n`,
       )
       err.forEach((err: { message: string; path: string }) =>
-        console.error(` ${red(`❌ ${err.message}`)} at ${yellow(err.path)}.`),
+        console.error(
+          ` ${styleText('red', `❌ ${err.message}`)} at ${styleText('yellow', err.path)}.`,
+        ),
       )
 
       process.exitCode = 1
