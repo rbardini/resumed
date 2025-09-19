@@ -2,24 +2,27 @@ import type { PuppeteerNode } from 'puppeteer'
 import { yellow } from 'yoctocolors'
 import type { Resume, Theme } from './types.js'
 
+type PuppeteerOptions = {
+  moduleName?: string
+  args?: string[]
+}
+
 export const pdf = async (
   html: string,
   resume: Resume,
   themeModule: Theme,
-  noSandbox?: boolean,
-  pptrModuleName = 'puppeteer',
+  { moduleName = 'puppeteer', args = [] }: PuppeteerOptions = {},
 ) => {
   let puppeteer: PuppeteerNode
 
   try {
-    puppeteer = await import(pptrModuleName)
+    puppeteer = await import(moduleName)
   } catch {
     throw new Error(
-      `Could not import ${yellow(pptrModuleName)} package. Is it installed?`,
+      `Could not import ${yellow(moduleName)} package. Is it installed?`,
     )
   }
-  const puppeteerLaunchArgs = noSandbox ? { args: ['--no-sandbox'] } : {}
-  const browser = await puppeteer.launch(puppeteerLaunchArgs)
+  const browser = await puppeteer.launch({ args })
   const page = await browser.newPage()
 
   await page.setContent(html, { waitUntil: 'networkidle0' })

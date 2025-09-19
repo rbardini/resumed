@@ -219,55 +219,7 @@ describe('export', () => {
     expect(render).toHaveBeenCalledWith(resume, theme)
 
     expect(pdf).toHaveBeenCalledTimes(1)
-    expect(pdf).toHaveBeenCalledWith('rendered', resume, theme, undefined)
-
-    expect(writeFile).toHaveBeenCalledTimes(1)
-    expect(writeFile).toHaveBeenCalledWith(
-      'resume.pdf',
-      new TextEncoder().encode('pdf'),
-    )
-
-    expect(logSpy).toHaveBeenCalledTimes(1)
-    expect(logSpy.mock.calls.join('\n')).toMatchInlineSnapshot(
-      `"You can find your exported resume at resume.pdf. Nice work! 🚀"`,
-    )
-  })
-
-  it('exports a resume with default filename and nosandbox passed as an argument', async () => {
-    const resume = {}
-
-    vi.mocked(readFile).mockResolvedValueOnce(JSON.stringify(resume))
-    vi.mocked(render).mockResolvedValueOnce('rendered')
-    vi.mocked(pdf).mockResolvedValueOnce(new TextEncoder().encode('pdf'))
-
-    await cli.parse([
-      '',
-      '',
-      'export',
-      '--theme',
-      'jsonresume-theme-even',
-      '-n',
-    ])
-
-    expect(readFile).toHaveBeenCalledTimes(1)
-    expect(readFile).toHaveBeenCalledWith('resume.json', 'utf-8')
-
-    expect(render).toHaveBeenCalledTimes(1)
-    expect(render).toHaveBeenCalledWith(resume, theme)
-
-    expect(pdf).toHaveBeenCalledTimes(1)
-    expect(pdf).toHaveBeenCalledWith('rendered', resume, theme, true)
-
-    expect(writeFile).toHaveBeenCalledTimes(1)
-    expect(writeFile).toHaveBeenCalledWith(
-      'resume.pdf',
-      new TextEncoder().encode('pdf'),
-    )
-
-    expect(logSpy).toHaveBeenCalledTimes(1)
-    expect(logSpy.mock.calls.join('\n')).toMatchInlineSnapshot(
-      `"You can find your exported resume at resume.pdf. Nice work! 🚀"`,
-    )
+    expect(pdf).toHaveBeenCalledWith('rendered', resume, theme, { args: [] })
   })
 
   it('exports a resume with custom output', async () => {
@@ -294,7 +246,7 @@ describe('export', () => {
     expect(render).toHaveBeenCalledWith(resume, theme)
 
     expect(pdf).toHaveBeenCalledTimes(1)
-    expect(pdf).toHaveBeenCalledWith('rendered', resume, theme, undefined)
+    expect(pdf).toHaveBeenCalledWith('rendered', resume, theme, { args: [] })
 
     expect(writeFile).toHaveBeenCalledTimes(1)
     expect(writeFile).toHaveBeenCalledWith(
@@ -306,6 +258,34 @@ describe('export', () => {
     expect(logSpy.mock.calls.join('\n')).toMatchInlineSnapshot(
       `"You can find your exported resume at custom-output.pdf. Nice work! 🚀"`,
     )
+  })
+
+  it('exports a resume with custom Puppeteer args', async () => {
+    const resume = {}
+
+    vi.mocked(readFile).mockResolvedValueOnce(JSON.stringify(resume))
+    vi.mocked(render).mockResolvedValueOnce('rendered')
+    vi.mocked(pdf).mockResolvedValueOnce(new TextEncoder().encode('pdf'))
+
+    await cli.parse([
+      '',
+      '',
+      'export',
+      '--theme',
+      'jsonresume-theme-even',
+      '--puppeteer-arg=--no-sandbox',
+    ])
+
+    expect(readFile).toHaveBeenCalledTimes(1)
+    expect(readFile).toHaveBeenCalledWith('resume.json', 'utf-8')
+
+    expect(render).toHaveBeenCalledTimes(1)
+    expect(render).toHaveBeenCalledWith(resume, theme)
+
+    expect(pdf).toHaveBeenCalledTimes(1)
+    expect(pdf).toHaveBeenCalledWith('rendered', resume, theme, {
+      args: ['--no-sandbox'],
+    })
   })
 })
 
