@@ -1,3 +1,4 @@
+import * as puppeteer from 'puppeteer'
 import { expect, it, vi } from 'vitest'
 import { pdf } from '../src/pdf.js'
 
@@ -18,6 +19,18 @@ it('exports a resume to PDF', async () => {
   }
 
   await expect(pdf('html', resume, theme)).resolves.toBe('pdf')
+  expect(puppeteer.launch).toHaveBeenCalledWith({ args: [] })
+})
+
+it('exports a resume to PDF with custom Puppeteer args', async () => {
+  const resume = require('@jsonresume/schema/sample.resume.json')
+  const theme = {
+    render: vi.fn(({ basics: { name } }) => name),
+  }
+  const args = ['--no-sandbox']
+
+  await expect(pdf('html', resume, theme, { args })).resolves.toBe('pdf')
+  expect(puppeteer.launch).toHaveBeenCalledWith({ args })
 })
 
 it('asks if Puppeteer package is installed if importing fails', async () => {
@@ -27,6 +40,6 @@ it('asks if Puppeteer package is installed if importing fails', async () => {
   }
 
   await expect(() =>
-    pdf('html', resume, theme, 'non-puppeteer'),
+    pdf('html', resume, theme, { moduleName: 'non-puppeteer' }),
   ).rejects.toThrow('Could not import non-puppeteer package. Is it installed?')
 })

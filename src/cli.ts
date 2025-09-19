@@ -11,6 +11,10 @@ type RenderOptions = {
   theme?: string
 }
 
+type ExportOptions = RenderOptions & {
+  'puppeteer-arg'?: string | string[]
+}
+
 enum OutputFormat {
   Html = 'html',
   Pdf = 'pdf',
@@ -76,18 +80,22 @@ cli
   .command('export [filename]', 'Export resume to PDF')
   .option('-o, --output', 'Output filename')
   .option('-t, --theme', 'Theme to use')
+  .option('--puppeteer-arg', 'Puppeteer launch argument')
   .action(
     async (
       filename: string = DEFAULT_FILENAME,
       {
         output = getOutputFilename(filename, OutputFormat.Pdf),
         theme,
-      }: RenderOptions,
+        ...opts
+      }: ExportOptions,
     ) => {
       const resume = await getResume(filename)
       const themeModule = await getThemeModule(resume, theme)
       const rendered = await render(resume, themeModule)
-      const exported = await pdf(rendered, resume, themeModule)
+      const exported = await pdf(rendered, resume, themeModule, {
+        args: [opts['puppeteer-arg'] ?? []].flat(),
+      })
       await writeFile(output, exported)
 
       console.log(

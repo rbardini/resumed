@@ -69,6 +69,7 @@ Export resume to PDF.
 
 - `-o, --output`: Output filename
 - `-t, --theme`: Theme to use
+- `--puppeteer-arg`: Puppeteer launch argument
 - `-h, --help`: Displays help message
 
 ### `init`
