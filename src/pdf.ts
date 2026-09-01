@@ -25,7 +25,10 @@ export const pdf = async (
   const browser = await puppeteer.launch({ args })
   const page = await browser.newPage()
 
-  await page.setContent(html, { waitUntil: 'networkidle0' })
+  // Puppeteer 25 dropped `networkidle0` from `setContent`, so wait for the
+  // `load` event (the default) plus web fonts, which `load` does not cover.
+  await page.setContent(html)
+  await page.evaluate(() => document.fonts.ready)
   const rendered = await page.pdf({
     ...themeModule.pdfRenderOptions,
     ...resume.meta?.pdfRenderOptions,

@@ -6,6 +6,7 @@ vi.mock('puppeteer', () => ({
   launch: vi.fn().mockResolvedValue({
     newPage: vi.fn().mockResolvedValue({
       setContent: vi.fn(),
+      evaluate: vi.fn(),
       pdf: vi.fn().mockResolvedValue('pdf'),
     }),
     close: vi.fn(),
