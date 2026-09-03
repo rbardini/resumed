@@ -4,7 +4,7 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "importHelpers": true,
-    "lib": ["ESNext"],
+    "lib": ["ESNext", "dom"],
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "noEmit": true,

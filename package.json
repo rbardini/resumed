@@ -55,22 +55,22 @@
     "strip-json-comments": "^5.0.0"
   },
   "devDependencies": {
-    "@types/node": "24.5.2",
-    "@vitest/coverage-v8": "3.2.4",
+    "@types/node": "24.13.3",
+    "@vitest/coverage-v8": "5.0.0",
     "husky": "9.1.7",
-    "json-schema-to-typescript": "15.0.4",
-    "jsonresume-theme-even": "0.26.0",
-    "lint-staged": "16.1.6",
-    "prettier": "3.6.2",
+    "json-schema-to-typescript": "16.0.0",
+    "jsonresume-theme-even": "0.26.1",
+    "lint-staged": "17.4.1",
+    "prettier": "3.9.6",
     "prettier-plugin-organize-imports": "4.3.0",
-    "prettier-plugin-packagejson": "2.5.19",
-    "publint": "0.3.13",
-    "puppeteer": "25.9.0",
+    "prettier-plugin-packagejson": "3.0.2",
+    "publint": "0.3.24",
+    "puppeteer": "25.10.0",
     "tslib": "2.8.1",
-    "typescript": "5.9.2",
-    "vite": "7.1.6",
-    "vite-plugin-dts": "4.5.4",
-    "vitest": "3.2.4"
+    "typescript": "6.0.3",
+    "vite": "8.2.2",
+    "vite-plugin-dts": "5.1.0",
+    "vitest": "5.0.0"
   },
   "peerDependencies": {
     "puppeteer": "^24.0.0 || ^25.0.0"
@@ -81,6 +81,6 @@
     }
   },
   "engines": {
-    "node": "^20.12 || >=21.7"
+    "node": ">=24"
   }
 }
