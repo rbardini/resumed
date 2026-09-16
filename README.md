@@ -112,4 +112,4 @@ While both tools can be used from the command line, Resumed also provides a full
 
 ### Other features
 
-Resumed makes some compromises in terms of features, such as no local previews or YAML format support. If you miss any of these, you can combine Resumed with other tools or continue using resume-cli.
+Resumed makes some compromises in terms of features, such as no local previews or YAML format support. If you miss any of these, you can combine Resumed with other tools or continue using [resume-cli](https://github.com/jsonresume/resume-cli) (archived).
