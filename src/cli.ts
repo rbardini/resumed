@@ -5,9 +5,11 @@ import sade from 'sade'
 import stripJsonComments from 'strip-json-comments'
 import { init, pdf, render, validate } from './index.js'
 import type { Resume, Theme } from './types.js'
+import { readInput } from './utils.js'
 
 type RenderOptions = {
   output?: string
+  stdin?: boolean
   theme?: string
 }
 
@@ -28,11 +30,25 @@ const pkg = JSON.parse(
 
 const DEFAULT_FILENAME = 'resume.json'
 
-const getOutputFilename = (filename: string, ext: string) =>
-  [basename(filename, extname(filename)), ext].join('.')
+const getInputFilename = (filename?: string, stdin?: boolean) => {
+  if (!stdin) return filename ?? DEFAULT_FILENAME
 
-const getResume = async (filename: string) =>
-  JSON.parse(stripJsonComments(await readFile(filename, 'utf-8')))
+  if (filename) {
+    throw new Error(
+      `Cannot use a filename together with the ${styleText('yellow', '--stdin')} option.`,
+    )
+  }
+
+  return undefined
+}
+
+const getOutputFilename = (filename: string | undefined, ext: string) => {
+  const inputFilename = filename ?? DEFAULT_FILENAME
+  return [basename(inputFilename, extname(inputFilename)), ext].join('.')
+}
+
+const getResume = async (filename?: string) =>
+  JSON.parse(stripJsonComments(await readInput(filename)))
 
 const getThemeModule = async (resume: Resume, theme?: string) => {
   const themeName = theme ?? (resume?.meta?.['theme'] as string | undefined)
@@ -57,21 +73,22 @@ cli
   .command('render [filename]', 'Render resume', { default: true })
   .option('-o, --output', 'Output filename')
   .option('-t, --theme', 'Theme to use')
+  .option('--stdin', 'Read resume from stdin')
   .action(
     async (
-      filename: string = DEFAULT_FILENAME,
-      {
-        output = getOutputFilename(filename, OutputFormat.Html),
-        theme,
-      }: RenderOptions,
+      filename: string | undefined,
+      { output, stdin, theme }: RenderOptions,
     ) => {
-      const resume = await getResume(filename)
+      const input = getInputFilename(filename, stdin)
+      const outputFilename =
+        output ?? getOutputFilename(input, OutputFormat.Html)
+      const resume = await getResume(input)
       const themeModule = await getThemeModule(resume, theme)
       const rendered = await render(resume, themeModule)
-      await writeFile(output, rendered)
+      await writeFile(outputFilename, rendered)
 
       console.log(
-        `You can find your rendered resume at ${styleText('yellow', output)}. Nice work! 🚀`,
+        `You can find your rendered resume at ${styleText('yellow', outputFilename)}. Nice work! 🚀`,
       )
     },
   )
@@ -81,25 +98,25 @@ cli
   .option('-o, --output', 'Output filename')
   .option('-t, --theme', 'Theme to use')
   .option('--puppeteer-arg', 'Puppeteer launch argument')
+  .option('--stdin', 'Read resume from stdin')
   .action(
     async (
-      filename: string = DEFAULT_FILENAME,
-      {
-        output = getOutputFilename(filename, OutputFormat.Pdf),
-        theme,
-        ...opts
-      }: ExportOptions,
+      filename: string | undefined,
+      { output, stdin, theme, ...opts }: ExportOptions,
     ) => {
-      const resume = await getResume(filename)
+      const input = getInputFilename(filename, stdin)
+      const outputFilename =
+        output ?? getOutputFilename(input, OutputFormat.Pdf)
+      const resume = await getResume(input)
       const themeModule = await getThemeModule(resume, theme)
       const rendered = await render(resume, themeModule)
       const exported = await pdf(rendered, resume, themeModule, {
         args: [opts['puppeteer-arg'] ?? []].flat(),
       })
-      await writeFile(output, exported)
+      await writeFile(outputFilename, exported)
 
       console.log(
-        `You can find your exported resume at ${styleText('yellow', output)}. Nice work! 🚀`,
+        `You can find your exported resume at ${styleText('yellow', outputFilename)}. Nice work! 🚀`,
       )
     },
   )
@@ -115,21 +132,25 @@ cli
 
 cli
   .command('validate [filename]', 'Validate resume')
-  .action(async (filename: string = DEFAULT_FILENAME) => {
+  .option('--stdin', 'Read resume from stdin')
+  .action(async (filename: string | undefined, { stdin }: RenderOptions) => {
+    const input = getInputFilename(filename, stdin)
+    const name = input ?? 'stdin'
+
     try {
-      await validate(filename)
-      console.log(`Your ${styleText('yellow', filename)} looks amazing! ✨`)
+      await validate(input)
+      console.log(`Your ${styleText('yellow', name)} looks amazing! ✨`)
     } catch (err) {
       if (!Array.isArray(err)) {
         throw err
       }
 
       console.error(
-        `Uh-oh! The following errors were found in ${styleText('yellow', filename)}:\n`,
+        `Uh-oh! The following errors were found in ${styleText('yellow', name)}:\n`,
       )
-      err.forEach((err: { message: string; path: string }) =>
+      err.forEach((err: { message: string; path: (string | number)[] }) =>
         console.error(
-          ` ${styleText('red', `❌ ${err.message}`)} at ${styleText('yellow', err.path)}.`,
+          ` ${styleText('red', `❌ ${err.message}`)} at ${styleText('yellow', err.path.join('.'))}.`,
         ),
       )
 

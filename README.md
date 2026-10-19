@@ -57,6 +57,7 @@ Render resume.
 
 - `-o`, `--output`: Output filename
 - `-t`, `--theme`: Theme to use
+- `--stdin`: Read resume from standard input
 - `-h`, `--help`: Display help message
 
 ### `export`
@@ -70,6 +71,7 @@ Export resume to PDF.
 - `-o, --output`: Output filename
 - `-t, --theme`: Theme to use
 - `--puppeteer-arg`: Puppeteer launch argument
+- `--stdin`: Read resume from standard input
 - `-h, --help`: Displays help message
 
 ### `init`
@@ -92,6 +94,7 @@ Validate resume.
 
 **Options:**
 
+- `--stdin`: Read resume from standard input
 - `-h`, `--help`: Display help message
 
 ## Motivation

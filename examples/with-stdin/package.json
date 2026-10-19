@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "init": "resumed init",
+    "start": "cat resume.json | resumed --stdin --theme jsonresume-theme-even"
+  },
+  "dependencies": {
+    "jsonresume-theme-even": "^0.26.0",
+    "resumed": "^7.0.0"
+  }
+}

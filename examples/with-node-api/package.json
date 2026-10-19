@@ -6,8 +6,7 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "jsonresume-theme-even": "^0.17.0",
-    "puppeteer": "^13.0.0",
-    "resumed": "^3.0.0"
+    "jsonresume-theme-even": "^0.26.0",
+    "resumed": "^7.0.0"
   }
 }
